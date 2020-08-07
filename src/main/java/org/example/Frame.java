@@ -44,7 +44,9 @@ public class Frame {
         JButton resetButton = new JButton("Reset");
         resetButton.addActionListener(e -> {
             textArea.setText(ISLAND_DEMO_VALUE);
-            refreshUiTimer.stop();
+            if (refreshUiTimer != null && refreshUiTimer.isRunning()) {
+                refreshUiTimer.stop();
+            }
         });
 
         JButton solveButton = new JButton("Solve");
