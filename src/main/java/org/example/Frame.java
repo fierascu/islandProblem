@@ -105,6 +105,16 @@ public class Frame {
         return arrays;
     }
 
+    public static ArrayList<Cell> getCells(String initialString) {
+        ArrayList<Cell> cells = new ArrayList<>();
+        String[][] matrix = extractArrays(initialString);
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[i].length; j++) {
+                cells.add(new Cell(i, j, matrix[i][j]));
+            }
+        }
+        return cells;
+    }
 
     private void computeIslands(final JTextArea textArea, JLabel headerLabel) {
         AtomicInteger currentPosition = new AtomicInteger();

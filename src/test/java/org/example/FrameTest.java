@@ -2,6 +2,8 @@ package org.example;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+
 import static org.example.Frame.*;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
@@ -23,4 +25,10 @@ class FrameTest {
         assertArrayEquals(expectedArrayMultipleRows, resultMultipleRows);
     }
 
+    @Test
+    void testGetCells() {
+        String row = "1101101";
+        ArrayList<Cell> cellsList = getCells(row);
+        System.out.println(cellsList);
+    }
 }
