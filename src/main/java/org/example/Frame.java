@@ -5,26 +5,12 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.regex.Pattern;
 
 import static javax.swing.JFrame.EXIT_ON_CLOSE;
+import static org.example.Constants.*;
 
 public class Frame {
 
-    public static final char CHAR_FOUND_TOKEN = '¹';
-    public static final char CHAR_NOT_FOUND_TOKEN = '°';
-    public static final char CHAR_FOR_ISLAND = '1';
-    public static final int HARD_STOP_VALUE = 100;
-    public static final int DELAY = 200;
-
-    public static String ISLAND_DEMO_VALUE = "11110\n" +
-            "11010\n" +
-            "11000\n" +
-            "00000";
-
-    public static String ISLAND_DEMO_VALUE_SIMPLE_ROW = "1101101";
-
-    private static Pattern PATTERN_FOR_LETTERS_AND_NUMBERS = Pattern.compile("^[a-zA-Z0-9]+$");
 
     private Timer refreshUiTimer;
 
@@ -71,7 +57,7 @@ public class Frame {
 
     private static char getCharToReplace(char charAtZero) {
         char charToReplace;
-        if (charAtZero == CHAR_FOR_ISLAND) {
+        if (charAtZero == Constants.CHAR_FOR_LAND) {
             charToReplace = CHAR_FOUND_TOKEN;
         } else {
             charToReplace = CHAR_NOT_FOUND_TOKEN;

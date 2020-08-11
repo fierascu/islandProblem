@@ -2,16 +2,18 @@ package org.example;
 
 import java.util.Objects;
 
-import static org.example.Frame.CHAR_FOR_ISLAND;
+import static org.example.Constants.CHAR_FOR_LAND;
 
 public class Cell {
-    char value;
+    private char value;
 
-    int x;
+    private int x;
 
-    int y;
+    private int y;
 
-    boolean isLand;
+    private boolean isLand;
+
+    private boolean isVisited;
 
     public Cell() {
     }
@@ -20,11 +22,23 @@ public class Cell {
         this.x = x;
         this.y = y;
         value = charValue;
-        isLand = value == CHAR_FOR_ISLAND;
+        isLand = value == CHAR_FOR_LAND;
     }
 
     public Cell(int x, int y, String value) {
         this(x, y, value.charAt(0));
+    }
+
+    public boolean isVisited() {
+        return isVisited;
+    }
+
+    public void setVisited() {
+        isVisited = true;
+    }
+
+    public void unsetVisited() {
+        isVisited = false;
     }
 
     public char getValue() {
@@ -59,7 +73,6 @@ public class Cell {
         isLand = land;
     }
 
-
     @Override
     public String toString() {
         return "Cell{" +
@@ -67,6 +80,7 @@ public class Cell {
                 ", x=" + x +
                 ", y=" + y +
                 ", isLand=" + isLand +
+                ", isVisited=" + isVisited +
                 '}';
     }
 
