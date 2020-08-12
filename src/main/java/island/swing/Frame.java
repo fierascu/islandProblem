@@ -20,8 +20,8 @@ public class Frame {
     private final JButton resetButton;
     private final JButton solveButton;
     private final JTextArea jTextArea;
-    private Timer refreshUiTimer;
     private final JLabel headerLabel;
+    private Timer refreshUiTimer;
 
     public Frame() {
         // frame initialisation
@@ -104,6 +104,13 @@ public class Frame {
                 char charToReplace = Util.getCharToReplace(charAtZero);
                 resultText = setReplacedCharacter(initialText, charToReplace, currentPosition);
                 setStatus(resultText, "Islands Found: " + islands.size());
+
+                String finalResultText = resultText;
+                refreshUiTimer = new Timer(Constants.DELAY, e -> {
+                    setStatus(finalResultText, "Islands Found: " + islands.size());
+                });
+                refreshUiTimer.setRepeats(false);
+                refreshUiTimer.start();
             }
 
         }
