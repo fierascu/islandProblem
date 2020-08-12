@@ -1,7 +1,6 @@
-package org.example;
+package island.recursion;
 
-import static org.example.Constants.CHAR_FOR_LAND;
-import static org.example.Constants.CHAR_FOR_WATTER;
+import island.common.Constants;
 
 /**
  * Use Depth-First Search
@@ -24,7 +23,7 @@ public class IslandsRecursion {
 
         for (int i = 0; i < h; i++) {
             for (int j = 0; j < l; j++) {
-                if (islandGrid[i][j] == CHAR_FOR_LAND) {
+                if (islandGrid[i][j] == Constants.CHAR_FOR_LAND) {
                     checkCell(islandGrid, i, j);
                     islandCount++;
                 }
@@ -45,7 +44,7 @@ public class IslandsRecursion {
             return;
         }
 
-        islandGrid[row][col] = CHAR_FOR_WATTER; // marking it visited
+        islandGrid[row][col] = Constants.CHAR_FOR_WATTER; // marking it visited
         checkCell(islandGrid, row + 1, col); // right
         checkCell(islandGrid, row - 1, col); // left
         checkCell(islandGrid, row, col + 1); // down
@@ -61,7 +60,7 @@ public class IslandsRecursion {
 
         int l = islandGrid[0].length;
 
-        return row < 0 || col < 0 || row >= h || col >= l || islandGrid[row][col] != CHAR_FOR_LAND;
+        return row < 0 || col < 0 || row >= h || col >= l || islandGrid[row][col] != Constants.CHAR_FOR_LAND;
     }
 
 }

@@ -1,8 +1,8 @@
-package org.example;
+package island.pojo;
 
 import java.util.Objects;
 
-import static org.example.Constants.CHAR_FOR_LAND;
+import static island.common.Constants.CHAR_FOR_LAND;
 
 public class Cell {
     private char value;

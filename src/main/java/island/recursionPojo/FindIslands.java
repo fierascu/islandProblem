@@ -1,6 +1,11 @@
-package org.example;
+package island.recursionPojo;
+
+import island.pojo.Cell;
+import island.pojo.Island;
 
 import java.util.ArrayList;
+
+import static island.common.Util.checkNeighborsIsland;
 
 public class FindIslands {
 
@@ -48,42 +53,6 @@ public class FindIslands {
         System.out.println("Input for cellsList:" + cellsList);
         System.out.println("Output Islands found:" + islands);
         return islands;
-    }
-
-    private static int checkNeighborsIsland(ArrayList<Island> islands, int x, int y) {
-        for (int i = 0; i < islands.size(); i++) {
-            if (islands.get(i).hasCell(x, y)) {
-                return islands.get(i).getId();
-            }
-        }
-        return -1;
-    }
-
-    public static int getRightLimit(ArrayList<Cell> cellsList) {
-        return cellsList.stream().mapToInt(c -> c.getY()).max().orElse(0);
-    }
-
-    public static int getIslandIdForExistingCell(ArrayList<Island> islands, Cell cell) {
-        for (int i = 0; i < islands.size(); i++) {
-            if (islands.get(i).hasCell(cell)) {
-                return islands.get(i).getId();
-            }
-        }
-        return -1;
-    }
-
-
-    public static int getCellFrom(ArrayList<Island> islands, Cell cell) {
-        for (int i = 0; i < islands.size(); i++) {
-            if (islands.get(i).hasCell(cell)) {
-                return islands.get(i).getId();
-            }
-        }
-        return -1;
-    }
-
-    public static Cell findCellByCoordinates(ArrayList<Cell> cellsList, int x, int y) {
-        return cellsList.stream().filter(cell -> cell.getX() == x).filter(cell -> cell.getY() == y).findFirst().orElse(null);
     }
 
 }

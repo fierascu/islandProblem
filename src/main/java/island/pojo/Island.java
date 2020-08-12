@@ -1,4 +1,4 @@
-package org.example;
+package island.pojo;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -44,7 +44,7 @@ public class Island {
 
     public boolean hasCell(int x, int y) {
         return !cells.isEmpty() &&
-                cells.stream().anyMatch(cell -> cell.getX() == x && cell.getY() == y);
+                cells.stream().filter(cell -> cell.getX() == x && cell.getY() == y).findFirst().isPresent();
     }
 
     public boolean isCellVisited(Cell cell) {

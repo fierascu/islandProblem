@@ -1,21 +1,23 @@
-package org.example;
+package island.swing;
+
+import island.common.Constants;
+import island.common.Util;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static island.common.Util.setReplacedCharacter;
 import static javax.swing.JFrame.EXIT_ON_CLOSE;
-import static org.example.Constants.*;
 
 public class Frame {
 
-
     private Timer refreshUiTimer;
 
+    private final JTextArea textArea;
 
-    Frame() {
+    public Frame() {
         JFrame jFrame = new JFrame("Island Problem");
         jFrame.setDefaultCloseOperation(EXIT_ON_CLOSE);
         jFrame.setSize(400, 500);
@@ -25,7 +27,7 @@ public class Frame {
         JLabel headerLabel = new JLabel("Press Solve button");
         jFrame.add(headerLabel, BorderLayout.NORTH);
 
-        final JTextArea textArea = new JTextArea(ISLAND_DEMO_VALUE_SIMPLE_ROW);
+        textArea = new JTextArea(Constants.ISLAND_DEMO_VALUE_SIMPLE_ROW);
         textArea.setLineWrap(true);
         Font font = new Font("monospaced", Font.BOLD, 20);
         textArea.setFont(font);
@@ -35,7 +37,7 @@ public class Frame {
 
         JButton resetButton = new JButton("Reset");
         resetButton.addActionListener(e -> {
-            textArea.setText(ISLAND_DEMO_VALUE_SIMPLE_ROW);
+            textArea.setText(Constants.ISLAND_DEMO_VALUE_SIMPLE_ROW);
             headerLabel.setText("RESETED");
             if (refreshUiTimer != null && refreshUiTimer.isRunning()) {
                 refreshUiTimer.stop();
@@ -55,51 +57,18 @@ public class Frame {
         solveButton.requestFocus();
     }
 
-    private static char getCharToReplace(char charAtZero) {
-        char charToReplace;
-        if (charAtZero == Constants.CHAR_FOR_LAND) {
-            charToReplace = CHAR_FOUND_TOKEN;
+    public String getTextAreaText() {
+        if (textArea != null) {
+            return textArea.getText();
         } else {
-            charToReplace = CHAR_NOT_FOUND_TOKEN;
+            return "";
         }
-        return charToReplace;
     }
 
-    public static String[][] extractArrays(String initialText) {
-        ArrayList<ArrayList<String>> matrix = new ArrayList<>();
-
-        String[] lines = initialText.split("\n");
-        for (int rowIndex = 0; rowIndex < lines.length; rowIndex++) {
-            ArrayList<String> row = new ArrayList<>();
-            for (int colIndex = 0; colIndex < lines[rowIndex].length(); colIndex++) {
-                String e = String.valueOf(lines[rowIndex].charAt(colIndex));
-                row.add(e);
-            }
-            matrix.add(row);
+    public void setTextAreaText(String text) {
+        if (textArea != null) {
+            textArea.setText(text);
         }
-
-        int rowSize = matrix.size();
-        int columnSize = matrix.get(0).size();
-
-        String arrays[][] = new String[rowSize][columnSize];
-        for (int i = 0; i < rowSize; i++) {
-            for (int j = 0; j < columnSize; j++) {
-                arrays[i][j] = matrix.get(i).get(j);
-            }
-        }
-
-        return arrays;
-    }
-
-    public static ArrayList<Cell> getCells(String initialString) {
-        ArrayList<Cell> cells = new ArrayList<>();
-        String[][] matrix = extractArrays(initialString);
-        for (int i = 0; i < matrix.length; i++) {
-            for (int j = 0; j < matrix[i].length; j++) {
-                cells.add(new Cell(i, j, matrix[i][j]));
-            }
-        }
-        return cells;
     }
 
     private void computeIslands(final JTextArea textArea, JLabel headerLabel) {
@@ -109,7 +78,7 @@ public class Frame {
         AtomicBoolean isLand = new AtomicBoolean(false);
         Integer lineLength = 4;
 
-        refreshUiTimer = new Timer(DELAY, e -> {
+        refreshUiTimer = new Timer(Constants.DELAY, e -> {
             String initialText = textArea.getText();
 
             boolean isPrevNeighborCharAnIsland = false;
@@ -117,13 +86,13 @@ public class Frame {
             if (currentPosition.get() < initialText.length()) {
                 char charAtZero = initialText.charAt(currentPosition.get());
 
-                if (isAlphaNumericCharacter(charAtZero)) {
-                    char charToReplace = getCharToReplace(charAtZero);
+                if (Util.isAlphaNumericCharacter(charAtZero)) {
+                    char charToReplace = Util.getCharToReplace(charAtZero);
                     textArea.setText(
                             setReplacedCharacter(initialText, charToReplace, currentPosition.get())
                     );
 
-                    if (charToReplace == CHAR_FOUND_TOKEN) {
+                    if (charToReplace == Constants.CHAR_FOUND_TOKEN) {
 
 
                         // fist row, first column
@@ -152,7 +121,7 @@ public class Frame {
                 System.out.println("currentPosition = " + currentPosition.get());
 
                 if (currentPosition.get() >= textArea.getText().length() ||
-                        timeElapsed.get() > HARD_STOP_VALUE) {
+                        timeElapsed.get() > Constants.HARD_STOP_VALUE) {
                     refreshUiTimer.stop();
                     textArea.setCaretPosition(0);
                 } else {
@@ -164,15 +133,10 @@ public class Frame {
         refreshUiTimer.start();
     }
 
-    private boolean isAlphaNumericCharacter(char charAtZero) {
-        return PATTERN_FOR_LETTERS_AND_NUMBERS.matcher("" + charAtZero).matches();
+    public static class IslandAnimationSwingApp {
+        public static void main(String[] args) {
+            SwingUtilities.invokeLater(Frame::new);
+        }
     }
-
-    private String setReplacedCharacter(String initialText, char charToReplace, int currentPosition) {
-        StringBuilder replacedInitialText = new StringBuilder(initialText);
-        replacedInitialText.setCharAt(currentPosition, charToReplace);
-        return replacedInitialText.toString();
-    }
-
 }
 

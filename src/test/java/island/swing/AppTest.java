@@ -1,8 +1,8 @@
-package org.example;
+package island.swing;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 public class AppTest {
 
@@ -20,6 +20,12 @@ public class AppTest {
 
     @Test
     public void shouldAnswerWithTrue() {
-        assertTrue(true);
+        Frame frame = new Frame();
+        String existingText = frame.getTextAreaText();
+        assertEquals(7, existingText.length());
+
+        frame.setTextAreaText("123");
+        existingText = frame.getTextAreaText();
+        assertEquals(3, existingText.length());
     }
 }

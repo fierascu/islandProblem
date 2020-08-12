@@ -1,4 +1,4 @@
-package org.example;
+package island.common;
 
 import java.util.regex.Pattern;
 
