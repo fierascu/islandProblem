@@ -12,8 +12,8 @@ public class Island {
     ArrayList<Cell> cells = new ArrayList<>();
 
     public Island() {
-        counter++;
         id = counter;
+        counter++;
     }
 
 
@@ -39,6 +39,12 @@ public class Island {
 
     public boolean hasCell(Cell cell) {
         return !cells.isEmpty() && cells.stream().findAny().get().equals(cell);
+    }
+
+
+    public boolean hasCell(int x, int y) {
+        return !cells.isEmpty() &&
+                cells.stream().anyMatch(cell -> cell.getX() == x && cell.getY() == y);
     }
 
     public boolean isCellVisited(Cell cell) {

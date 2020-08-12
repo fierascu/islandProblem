@@ -55,7 +55,7 @@ class FrameTest {
         int cellsWithLand = islands.stream().mapToInt(e -> (int) e.getCells().stream().count()).sum();
 
         assertEquals(5, cellsWithLand);
-        assertEquals(1, islands.size());
+        assertEquals(3, islands.size());
         System.out.println(islands);
     }
 

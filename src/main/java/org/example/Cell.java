@@ -25,6 +25,14 @@ public class Cell {
         isLand = value == CHAR_FOR_LAND;
     }
 
+    public Cell(int x, int y, int intAsCharValue) {
+        this.x = x;
+        this.y = y;
+        // If you add '0' with int variable, it will return actual value in the char variable. The ASCII value of '0' is 48.
+        value = (char) (intAsCharValue + '0');
+        isLand = value == CHAR_FOR_LAND;
+    }
+
     public Cell(int x, int y, String value) {
         this(x, y, value.charAt(0));
     }
