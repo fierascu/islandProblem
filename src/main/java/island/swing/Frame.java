@@ -2,135 +2,116 @@ package island.swing;
 
 import island.common.Constants;
 import island.common.Util;
+import island.pojo.Cell;
+import island.pojo.Island;
+import island.recursionPojo.FindIslands;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.ArrayList;
 
+import static island.common.Util.getCells;
 import static island.common.Util.setReplacedCharacter;
 import static javax.swing.JFrame.EXIT_ON_CLOSE;
 
 public class Frame {
 
+    private final JFrame jFrame;
+    private final JButton resetButton;
+    private final JButton solveButton;
+    private final JTextArea jTextArea;
     private Timer refreshUiTimer;
-
-    private final JTextArea textArea;
+    private final JLabel headerLabel;
 
     public Frame() {
-        JFrame jFrame = new JFrame("Island Problem");
+        // frame initialisation
+        jFrame = new JFrame("Island Problem");
         jFrame.setDefaultCloseOperation(EXIT_ON_CLOSE);
         jFrame.setSize(400, 500);
         jFrame.setVisible(true);
         jFrame.setLayout(new BorderLayout());
 
-        JLabel headerLabel = new JLabel("Press Solve button");
+        // add label
+        headerLabel = new JLabel();
         jFrame.add(headerLabel, BorderLayout.NORTH);
 
-        textArea = new JTextArea(Constants.ISLAND_DEMO_VALUE_SIMPLE_ROW);
-        textArea.setLineWrap(true);
+        // add testArea
+        jTextArea = new JTextArea();
+        jTextArea.setLineWrap(true);
         Font font = new Font("monospaced", Font.BOLD, 20);
-        textArea.setFont(font);
-        textArea.setForeground(Color.DARK_GRAY);
-        jFrame.add(textArea, BorderLayout.CENTER);
+        jTextArea.setFont(font);
+        jTextArea.setForeground(Color.DARK_GRAY);
+        jFrame.add(jTextArea, BorderLayout.CENTER);
 
-
-        JButton resetButton = new JButton("Reset");
-        resetButton.addActionListener(e -> {
-            textArea.setText(Constants.ISLAND_DEMO_VALUE_SIMPLE_ROW);
-            headerLabel.setText("RESETED");
-            if (refreshUiTimer != null && refreshUiTimer.isRunning()) {
-                refreshUiTimer.stop();
-            }
-        });
-
-        JButton solveButton = new JButton("Solve");
-        solveButton.addActionListener(e -> computeIslands(textArea, headerLabel));
-
+        // create secondary panel SOUTH for buttons
         JPanel buttonsPanel = new JPanel();
         buttonsPanel.setLayout(new BorderLayout());
+
+        // add resetButton on secondary panel
+        resetButton = new JButton("Reset");
+        resetButton.addActionListener(e -> {
+            setStatus(Constants.ISLAND_DEMO_VALUE, "Reseted");
+
+        });
         buttonsPanel.add(resetButton, BorderLayout.EAST);
+
+        // add solveButton on secondary panel
+        solveButton = new JButton("Solve");
+        solveButton.addActionListener(e -> computeIslands());
         buttonsPanel.add(solveButton, BorderLayout.WEST);
 
+        // add secondary panel on main one
         jFrame.add(buttonsPanel, BorderLayout.SOUTH);
 
+        // set focus on solve button
         solveButton.requestFocus();
+
+        // populate with data
+        setStatus(Constants.ISLAND_DEMO_VALUE, "Press Solve Button");
     }
 
     public String getTextAreaText() {
-        if (textArea != null) {
-            return textArea.getText();
+        if (jTextArea != null) {
+            return jTextArea.getText();
         } else {
             return "";
         }
     }
 
     public void setTextAreaText(String text) {
-        if (textArea != null) {
-            textArea.setText(text);
+        if (jTextArea != null) {
+            jTextArea.setText(text);
         }
     }
 
-    private void computeIslands(final JTextArea textArea, JLabel headerLabel) {
-        AtomicInteger currentPosition = new AtomicInteger();
-        AtomicInteger timeElapsed = new AtomicInteger();
-        AtomicInteger islandFound = new AtomicInteger();
-        AtomicBoolean isLand = new AtomicBoolean(false);
-        Integer lineLength = 4;
+    private void setStatus(String textArea, String textLabel) {
+        jTextArea.setText(textArea);
+        headerLabel.setText(textLabel);
+    }
 
-        refreshUiTimer = new Timer(Constants.DELAY, e -> {
-            String initialText = textArea.getText();
+    private void computeIslands() {
+        String initialText = jTextArea.getText();
+        ArrayList<Cell> cellsList = getCells(initialText);
+        System.out.println(cellsList);
 
-            boolean isPrevNeighborCharAnIsland = false;
+        ArrayList<Island> islands = FindIslands.discoverIsland(cellsList);
 
-            if (currentPosition.get() < initialText.length()) {
-                char charAtZero = initialText.charAt(currentPosition.get());
+        String resultText = "";
+        for (int currentPosition = 0; currentPosition < initialText.length(); currentPosition++) {
+            char charAtZero = initialText.charAt(currentPosition);
 
-                if (Util.isAlphaNumericCharacter(charAtZero)) {
-                    char charToReplace = Util.getCharToReplace(charAtZero);
-                    textArea.setText(
-                            setReplacedCharacter(initialText, charToReplace, currentPosition.get())
-                    );
-
-                    if (charToReplace == Constants.CHAR_FOUND_TOKEN) {
-
-
-                        // fist row, first column
-                        if (!isPrevNeighborCharAnIsland && islandFound.get() == 0) {
-                            isPrevNeighborCharAnIsland = true;
-                            islandFound.getAndIncrement();
-                        }
-
-
-                        isLand.getAndSet(true);
-                        if (isPrevNeighborCharAnIsland) {
-                            islandFound.getAndIncrement();
-                        }
-                        headerLabel.setText(islandFound.get() + " islands found");
-
-                        isPrevNeighborCharAnIsland = true;
-
-                    } else {
-                        isPrevNeighborCharAnIsland = false;
-                    }
-                } else {
-                    // is end or start of line
-                    isLand.getAndSet(false);
-                }
-
-                System.out.println("currentPosition = " + currentPosition.get());
-
-                if (currentPosition.get() >= textArea.getText().length() ||
-                        timeElapsed.get() > Constants.HARD_STOP_VALUE) {
-                    refreshUiTimer.stop();
-                    textArea.setCaretPosition(0);
-                } else {
-                    currentPosition.getAndIncrement();
-                    timeElapsed.getAndIncrement();
-                }
+            if (Util.isAlphaNumericCharacter(charAtZero)) {
+                char charToReplace = Util.getCharToReplace(charAtZero);
+                resultText = setReplacedCharacter(initialText, charToReplace, currentPosition);
+                setStatus(resultText, "Islands Found: " + islands.size());
             }
-        });
-        refreshUiTimer.start();
+
+        }
+        // for animation purposes, excuse the replace chars and string operations
+        initialText = initialText.replaceAll("" + Constants.CHAR_FOR_LAND, "" + Constants.CHAR_FOUND_TOKEN);
+        initialText = initialText.replaceAll("" + Constants.CHAR_FOR_WATTER, "" + Constants.CHAR_NOT_FOUND_TOKEN);
+
+        setStatus(initialText, "Islands Found: " + islands.size());
     }
 
     public static class IslandAnimationSwingApp {
