@@ -4,37 +4,29 @@ import island.pojo.Cell;
 import island.pojo.Island;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class Util {
-    public static int checkNeighborsIsland(ArrayList<Island> islands, int x, int y) {
+    public static UUID checkNeighborsIsland(ArrayList<Island> islands, int x, int y) {
         for (int i = 0; i < islands.size(); i++) {
             if (islands.get(i).hasCell(x, y)) {
-                return islands.get(i).getId();
+                return islands.get(i).getUuid();
             }
         }
-        return -1;
+        return null;
+    }
+
+    public static UUID getIslandIdForExistingCell(ArrayList<Island> islands, Cell cell) {
+        for (int i = 0; i < islands.size(); i++) {
+            if (islands.get(i).hasCell(cell)) {
+                return islands.get(i).getUuid();
+            }
+        }
+        return null;
     }
 
     public static int getRightLimit(ArrayList<Cell> cellsList) {
         return cellsList.stream().mapToInt(c -> c.getY()).max().orElse(0);
-    }
-
-    public static int getIslandIdForExistingCell(ArrayList<Island> islands, Cell cell) {
-        for (int i = 0; i < islands.size(); i++) {
-            if (islands.get(i).hasCell(cell)) {
-                return islands.get(i).getId();
-            }
-        }
-        return -1;
-    }
-
-    public static int getCellFrom(ArrayList<Island> islands, Cell cell) {
-        for (int i = 0; i < islands.size(); i++) {
-            if (islands.get(i).hasCell(cell)) {
-                return islands.get(i).getId();
-            }
-        }
-        return -1;
     }
 
     public static Cell findCellByCoordinates(ArrayList<Cell> cellsList, int x, int y) {

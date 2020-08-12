@@ -2,27 +2,20 @@ package island.pojo;
 
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.UUID;
 
 public class Island {
 
-    static int counter;
-
-    int id;
+    UUID uuid;
 
     ArrayList<Cell> cells = new ArrayList<>();
 
     public Island() {
-        id = counter;
-        counter++;
+        uuid = UUID.randomUUID();
     }
 
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+    public UUID getUuid() {
+        return uuid;
     }
 
     public ArrayList<Cell> getCells() {
@@ -41,7 +34,6 @@ public class Island {
         return !cells.isEmpty() && cells.stream().findAny().get().equals(cell);
     }
 
-
     public boolean hasCell(int x, int y) {
         return !cells.isEmpty() &&
                 cells.stream().filter(cell -> cell.getX() == x && cell.getY() == y).findFirst().isPresent();
@@ -52,23 +44,23 @@ public class Island {
     }
 
     @Override
-    public String toString() {
-        return System.lineSeparator() + "Island{" +
-                "id=" + id +
-                ", cells=" + cells +
-                '}';
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Island)) return false;
         Island island = (Island) o;
-        return getId() == island.getId();
+        return getUuid().equals(island.getUuid());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId());
+        return Objects.hash(getUuid());
+    }
+
+    @Override
+    public String toString() {
+        return "Island{" +
+                "uuid=" + uuid +
+                ", cells=" + cells +
+                '}';
     }
 }

@@ -4,6 +4,7 @@ import island.pojo.Cell;
 import island.pojo.Island;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import static island.common.Util.checkNeighborsIsland;
 
@@ -21,29 +22,34 @@ public class FindIslands {
                     // to be an Island it must have been visited and contain land
 
                     // initial state is not found = -1
-                    int islandId = -1;
+                    UUID islandUuid = null;
 
                     // check left
-                    islandId = checkNeighborsIsland(islands, cell.getX() - 1, cell.getY());
+                    islandUuid = checkNeighborsIsland(islands, cell.getX() - 1, cell.getY());
                     // check top if not found previously
-                    if (islandId == -1) {
-                        islandId = checkNeighborsIsland(islands, cell.getX(), cell.getY() + 1);
+                    if (islandUuid == null) {
+                        islandUuid = checkNeighborsIsland(islands, cell.getX(), cell.getY() + 1);
                     }
                     // check right if not found previously
-                    if (islandId == -1) {
-                        islandId = checkNeighborsIsland(islands, cell.getX() + 1, cell.getY());
+                    if (islandUuid == null) {
+                        islandUuid = checkNeighborsIsland(islands, cell.getX() + 1, cell.getY());
                     }
                     // check bottom if not found previously
-                    if (islandId == -1) {
-                        islandId = checkNeighborsIsland(islands, cell.getX(), cell.getY() - 1);
+                    if (islandUuid == null) {
+                        islandUuid = checkNeighborsIsland(islands, cell.getX(), cell.getY() - 1);
                     }
 
-                    if (islandId == -1) {
+                    if (islandUuid == null) {
                         Island island = new Island();
                         island.addCell(cell);
                         islands.add(island);
                     } else {
-                        islands.get(islandId).addCell(cell);
+                        for (int j = 0; j < islands.size(); j++) {
+                            Island island = islands.get(j);
+                            if (island.getUuid() == islandUuid) {
+                                island.addCell(cell);
+                            }
+                        }
                     }
 
                 }
